@@ -5,9 +5,9 @@
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
-module.exports.db = [];
+module.exports.db = {};
 
-module.exports.handleRequest = function(request, response) {
+module.exports.handler = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
@@ -18,7 +18,10 @@ module.exports.handleRequest = function(request, response) {
 
 // /classes/messages
 
-  if (request.method === 'GET' && request.url === '/classes/messages') {
+  var isRoom = request.url.split('/')[1] === 'classes';
+  var room = request.url.split('/')[2];
+
+  if (isRoom && request.method === 'GET') {
     var statusCode = 200;
 
     /* Without this line, this server wouldn't work. See the note
@@ -34,9 +37,10 @@ module.exports.handleRequest = function(request, response) {
      * anything back to the client until you do. The string you pass to
      * response.end() will be the body of the response - i.e. what shows
      * up in the browser.*/
-    response.end(JSON.stringify({results: module.exports.db}));
+    module.exports.db[room] = module.exports.db[room] || [];
+    response.end(JSON.stringify({results: module.exports.db[room]}));
 
-  } else if (request.method === 'POST' && request.url === '/classes/messages') {
+  } else if (isRoom && request.method === 'POST') {
 
     var statusCode = 201;
 
@@ -48,7 +52,7 @@ module.exports.handleRequest = function(request, response) {
 
     request.on('end', function () {
       message = JSON.parse(message);
-      module.exports.db.unshift(message);
+      module.exports.db[room].unshift(message);
       console.log(message);
     });
 
@@ -66,7 +70,7 @@ module.exports.handleRequest = function(request, response) {
      * anything back to the client until you do. The string you pass to
      * response.end() will be the body of the response - i.e. what shows
      * up in the browser.*/
-    response.end(JSON.stringify({results: module.exports.db}));
+    response.end(JSON.stringify({results: module.exports.db[room]}));
   } else {
     var statusCode = 404;
     /* Without this line, this server wouldn't work. See the note

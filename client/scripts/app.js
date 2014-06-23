@@ -55,20 +55,15 @@ var SelectRoom = Backbone.View.extend({
 var Room = Backbone.Collection.extend({
   model: Message,
   currentRoomname: '4chan',
-  url: 'http://127.0.0.1:3000/classes/chatterbox',
+  url: function () {
+    return 'http://127.0.0.1:3000/classes/' + this.currentRoomname;
+  },
   parse: function (resp) {
     return resp.results.reverse();
   },
   initialize: function () {
     setInterval(function () {
-      this.fetch({
-        data: {
-          order: '-createdAt',
-          where: {
-            roomname: this.currentRoomname
-          }
-        }
-      });
+      this.fetch();
     }.bind(this), 1000);
   }
 });
