@@ -54,8 +54,8 @@ var SelectRoom = Backbone.View.extend({
 
 var Room = Backbone.Collection.extend({
   model: Message,
-  currentRoomname: 'lobby',
-  url: 'https://api.parse.com/1/classes/chatterbox',
+  currentRoomname: '4chan',
+  url: 'http://127.0.0.1:3000/classes/chatterbox',
   parse: function (resp) {
     return resp.results.reverse();
   },
@@ -80,10 +80,10 @@ var RoomView = Backbone.View.extend({
         model: model
       });
       this.$el.prepend(view.render().el);
-    }.bind(this));
+    }, this);
     this.collection.on('reset', function () {
       this.$el.empty();
-    }.bind(this));
+    }, this);
   }
 });
 

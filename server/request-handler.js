@@ -5,6 +5,8 @@
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
+module.exports.db = [];
+
 module.exports.handleRequest = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
@@ -14,22 +16,93 @@ module.exports.handleRequest = function(request, response) {
 
   console.log("Serving request type " + request.method + " for url " + request.url);
 
-  var statusCode = 200;
+// /classes/messages
 
-  /* Without this line, this server wouldn't work. See the note
-   * below about CORS. */
-  var headers = defaultCorsHeaders;
+  if (request.method === 'GET' && request.url === '/classes/messages') {
+    var statusCode = 200;
 
-  headers['Content-Type'] = "text/plain";
+    /* Without this line, this server wouldn't work. See the note
+     * below about CORS. */
+    var headers = defaultCorsHeaders;
 
-  /* .writeHead() tells our server what HTTP status code to send back */
-  response.writeHead(statusCode, headers);
+    headers['Content-Type'] = "application/json";
 
-  /* Make sure to always call response.end() - Node will not send
-   * anything back to the client until you do. The string you pass to
-   * response.end() will be the body of the response - i.e. what shows
-   * up in the browser.*/
-  response.end("Hello, World!");
+    /* .writeHead() tells our server what HTTP status code to send back */
+    response.writeHead(statusCode, headers);
+
+    /* Make sure to always call response.end() - Node will not send
+     * anything back to the client until you do. The string you pass to
+     * response.end() will be the body of the response - i.e. what shows
+     * up in the browser.*/
+    response.end(JSON.stringify({results: module.exports.db}));
+
+  } else if (request.method === 'POST' && request.url === '/classes/messages') {
+
+    var statusCode = 201;
+
+    var message = '';
+
+    request.on('data', function (chunk) {
+      message += chunk;
+    });
+
+    request.on('end', function () {
+      message = JSON.parse(message);
+      module.exports.db.unshift(message);
+      console.log(message);
+    });
+
+
+    /* Without this line, this server wouldn't work. See the note
+     * below about CORS. */
+    var headers = defaultCorsHeaders;
+
+    headers['Content-Type'] = "application/json";
+
+    /* .writeHead() tells our server what HTTP status code to send back */
+    response.writeHead(statusCode, headers);
+
+    /* Make sure to always call response.end() - Node will not send
+     * anything back to the client until you do. The string you pass to
+     * response.end() will be the body of the response - i.e. what shows
+     * up in the browser.*/
+    response.end(JSON.stringify({results: module.exports.db}));
+  } else {
+    var statusCode = 404;
+    /* Without this line, this server wouldn't work. See the note
+     * below about CORS. */
+    var headers = defaultCorsHeaders;
+
+    headers['Content-Type'] = "application/json";
+
+    /* .writeHead() tells our server what HTTP status code to send back */
+    response.writeHead(statusCode, headers);
+
+    /* Make sure to always call response.end() - Node will not send
+     * anything back to the client until you do. The string you pass to
+     * response.end() will be the body of the response - i.e. what shows
+     * up in the browser.*/
+    response.end(JSON.stringify({status: 'error', message: 'File not found'}));
+  }
+
+
+
+  // var statusCode = 200;
+
+  // /* Without this line, this server wouldn't work. See the note
+  //  * below about CORS. */
+  // var headers = defaultCorsHeaders;
+
+  // headers['Content-Type'] = "text/plain";
+
+  // /* .writeHead() tells our server what HTTP status code to send back */
+  // response.writeHead(statusCode, headers);
+
+  // /* Make sure to always call response.end() - Node will not send
+  //  * anything back to the client until you do. The string you pass to
+  //  * response.end() will be the body of the response - i.e. what shows
+  //  * up in the browser.*/
+  // response.end("Hello, World!");
 };
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
