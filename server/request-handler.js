@@ -14,6 +14,15 @@ module.exports = {
     }
   })(),
 
+  /* Parameteres being sent into handler function (below)
+
+  'request':  An object that contains all the info sent from client (along with 
+              lots of metadata).
+
+  'response': An object with several necessary methods (ex: writeHead), and
+              a shell that we will put any info that we will send back to client.
+  */
+  
   handler: function(request, response) {
     console.log('Serving request type ' + request.method + ' for url ' + request.url);
 
