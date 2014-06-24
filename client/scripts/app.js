@@ -20,7 +20,6 @@ var MessageForm = Backbone.View.extend({
     e.preventDefault();
     this.collection.create({
       username: window.location.search.split('username=')[1],
-      roomname: this.collection.currentRoomname,
       text: this.$el.find('input').val()
     }, {
       wait: true
