@@ -55,7 +55,7 @@ var Room = Backbone.Collection.extend({
   model: Message,
   currentRoomname: '4chan',
   url: function () {
-    return 'http://127.0.0.1:3000/classes/' + this.currentRoomname;
+    return 'http://127.0.0.1:3010/classes/' + this.currentRoomname;
   },
   parse: function (resp) {
     return resp.results.reverse();
