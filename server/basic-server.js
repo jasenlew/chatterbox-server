@@ -1,5 +1,5 @@
-http = require("http");
-requestHandler = require('./request-handler');
+var http = require('http');
+var requestHandler = require('./request-handler');
 
 var port = 3010;
 var ip = "127.0.0.1";
