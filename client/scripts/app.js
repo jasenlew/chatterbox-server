@@ -45,15 +45,15 @@ var SelectRoom = Backbone.View.extend({
     this.$el.append($option);
   },
   initialize: function () {
-    this.addRoom('default');
-    this.addRoom('lobby');
-    this.addRoom('4chan');
+    this.addRoom('Sports');
+    this.addRoom('Food');
+    this.addRoom('Travel');
   }
 });
 
 var Room = Backbone.Collection.extend({
   model: Message,
-  currentRoomname: '4chan',
+  currentRoomname: 'Travel',
   url: function () {
     return 'http://127.0.0.1:3010/classes/' + this.currentRoomname;
   },
