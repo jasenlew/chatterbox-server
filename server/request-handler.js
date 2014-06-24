@@ -1,6 +1,18 @@
+var fs = require('fs');
+
+setInterval(function () {
+  fs.writeFileSync('db.json', JSON.stringify(module.exports.db));
+}, 1000);
+
 module.exports = {
 
-  db: {},
+  db: (function () {
+    if (fs.existsSync('db.json')) {
+      return require('./db.json');
+    } else {
+      return {};
+    }
+  })(),
 
   handler: function(request, response) {
     console.log('Serving request type ' + request.method + ' for url ' + request.url);
